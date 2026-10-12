@@ -1,0 +1,58 @@
+{
+  "version": "0.1.0",
+  "owned_skills": [
+    "agent-task",
+    "dispatch",
+    "feedback-triage",
+    "new-project",
+    "nightly-review",
+    "no-ai-look",
+    "prior-art",
+    "project-status"
+  ],
+  "required_external_skills": [
+    "check",
+    "think",
+    "hunt",
+    "ui"
+  ],
+  "optional_external_skills": [
+    "read",
+    "write",
+    "health",
+    "learn"
+  ],
+  "templates": [
+    "AGENTS.md",
+    "BACKLOG.md",
+    "DECISIONS.md",
+    "LESSONS.md",
+    "PROGRESS.md"
+  ],
+  "support_scripts": [
+    "ask-rule-scan.sh",
+    "watchdog.sh",
+    "with-lock.sh"
+  ],
+  "bundled_host_plugins": 0,
+  "bundled_mcp_servers": 0,
+  "default_services": 0,
+  "optional_services": [
+    "tick",
+    "night",
+    "review",
+    "backup",
+    "watchdog",
+    "telegram-listen"
+  ],
+  "source_scripts": [
+    "backup-config.sh",
+    "bootstrap.sh",
+    "config_privacy.py",
+    "install.sh",
+    "package-release.sh",
+    "pre-commit",
+    "privacy_scan.py",
+    "update.sh"
+  ]
+}

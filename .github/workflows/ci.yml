@@ -1,0 +1,28 @@
+name: Verify
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Format, vet and isolated regression
+        run: test -z "$(gofmt -l .)" && go vet ./... && go test -count=1 ./...
+      - name: Formal installation lifecycle
+        env:
+          AGENTQ_BOOTSTRAP_ACCEPTANCE: '1'
+        run: go test -count=1 -v -run '^TestBootstrapAcceptance$' ./...
+      - name: Version and release packages
+        run: |
+          go run . version
+          sh scripts/package-release.sh "$RUNNER_TEMP/agentq-release"
+          cd "$RUNNER_TEMP/agentq-release"
+          shasum -a 256 -c SHA256SUMS

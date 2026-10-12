@@ -1,0 +1,77 @@
+# agentq
+
+> Public repository: https://github.com/dodo258/agentq-public
+> Release: 0.1.0
+> Purpose: local macOS scheduler for Claude Code workers driven by project docs/BACKLOG.md files.
+
+## Supported scope
+
+- Supported and tested: macOS 13+, Claude Code CLI, arm64 hardware.
+- Build verified only: macOS amd64; no Intel Mac hardware test yet.
+- Not supported in v0.1.0: Codex, Linux, WSL, Windows.
+- The release contains 8 agentq-owned skills, 4 required Waza skills, 4 optional Waza skills, 5 templates, support scripts, 0 plugins, and 0 MCP servers.
+- Telegram and the resident agentq listen process are optional.
+
+## Preferred installation
+
+Download the v0.1.0 Release installer to a temporary file, then run it. Do not pipe it directly into a shell.
+
+```sh
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+curl -fL https://github.com/dodo258/agentq-public/releases/download/v0.1.0/install.sh -o "$tmp"
+sh "$tmp"
+```
+
+The Release installer checks the macOS architecture and the presence of curl, python3, git, and shasum, downloads the matching v0.1.0 archive and SHA256SUMS, verifies the archive, and invokes the packaged `agentq setup --yes "$@"` from a temporary directory. It does not require Go or Node.
+
+Prerequisites are macOS 13+, Git, Python 3, and an already installed and authenticated Claude Code CLI. If a local tool is missing, the Release script names it and exits. If Claude Code CLI is missing, setup prints the official stable installer and authentication instructions. Do not install system software silently, create an account, sign in, request credentials, or change authentication on the user's behalf.
+
+## Source installation
+
+```sh
+git clone https://github.com/dodo258/agentq-public.git
+cd agentq-public
+sh scripts/bootstrap.sh --yes
+```
+
+Source installation also requires the Go version declared in go.mod.
+
+## Installation rules
+
+- Preserve existing configuration, permissions, authentication, hooks, status lines, jobs, and secrets.
+- A fresh installation stays paused, disables night, review, patrol, and notifications, and uses permission_mode=default.
+- Do not resume scheduling automatically.
+- Add `--services`, `--backup`, `--watchdog`, or `--extras` only when the user explicitly requests that scope.
+- Telegram is optional. Do not ask for a bot token unless the user chooses to configure Telegram.
+- Do not treat local skills, plugin caches, identity files, or private configuration as release assets.
+
+## How it is used
+
+Natural-language requests belong in an interactive Claude Code session inside the project. The dispatch skill records work in docs/BACKLOG.md. agentq then starts independent `claude -p` workers and supervises them.
+
+Useful management commands:
+
+```text
+agentq status
+agentq run <project> [keyword]
+agentq logs <job-id>
+agentq pause
+agentq resume
+agentq doctor
+```
+
+agentq is not a general chat command. It selects, starts, supervises, and records work; it does not itself edit BACKLOG files, product code, commits, or merges.
+
+## Authoritative documentation
+
+- Chinese README: https://github.com/dodo258/agentq-public/blob/main/README.md
+- English README: https://github.com/dodo258/agentq-public/blob/main/README.en.md
+- Chinese install guide: https://github.com/dodo258/agentq-public/blob/main/docs/install.zh-CN.md
+- English install guide: https://github.com/dodo258/agentq-public/blob/main/docs/install.en.md
+- Chinese reference: https://github.com/dodo258/agentq-public/blob/main/docs/reference.zh-CN.md
+- English reference: https://github.com/dodo258/agentq-public/blob/main/docs/reference.en.md
+- Exact component inventory: https://github.com/dodo258/agentq-public/blob/main/COMPONENTS.json
+- Readable component guide: https://github.com/dodo258/agentq-public/blob/main/docs/components.md
+
+For installation entry points and platform support, the READMEs and install guides override older examples in the long reference.
